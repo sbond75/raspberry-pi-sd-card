@@ -19,7 +19,7 @@ size_sectors=$(($size*1024*1024/512))
 echo "$size_sectors"
 end_sector=$(($start_sector + $size_sectors))
 echo "$end_sector"
-output="img_$name_$(date "+%Y-%m-%d_%H_%M_%S_%Z")"
+output="img_${name}_$(date "+%Y-%m-%d_%H_%M_%S_%Z")"
 # DONETODO: run parted to resize here
 read -p "go? (else ctrl-c) " asd
 # Back up partition table
