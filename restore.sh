@@ -26,6 +26,7 @@ output="img_restored_${name}_on_$(date "+%Y-%m-%d_%H_%M_%S_%Z")"
 # Restore
 read -p "go?" asd
 ddrescue --force --ask -v --size=$size "$fname" "$device" "$output.restore.mapfile.txt"
+sleep 5 # Ensure we don't get "This disk is currently in use" from sfdisk
 # Resize partition table: resize last partition to max size
 echo ", +" | sfdisk -N "$partition_number" "$device" --backup "$device" --backup-file "$name"_beforeRestore_partitionTable_backup
 # Expand filesystem to fill
