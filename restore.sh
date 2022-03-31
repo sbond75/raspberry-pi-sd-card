@@ -1,4 +1,11 @@
 #!/bin/bash
+# Run this script using sudo. We don't use sudo in this script because we don't want it to prompt for the password midway through since operations take a while in this script.
+# Make sure only root can run our script
+if [[ $EUID -ne 0 ]]; then
+   echo "This script must be run as root" 1>&2
+   exit 1
+fi
+
 set -e # stop on non-zero exit code
 set -x # verbose
 if [ "$#" -lt 2 ]; then
@@ -18,11 +25,11 @@ partition_number=2 # Partition number of the ext4 partition on the SD card. Get 
 output="img_restored_${name}_on_$(date "+%Y-%m-%d_%H_%M_%S_%Z")"
 # Restore
 read -p "go?" asd
-sudo ddrescue --force --ask -v --size=$size "$fname" "$device" "$output.restore.mapfile.txt"
+ddrescue --force --ask -v --size=$size "$fname" "$device" "$output.restore.mapfile.txt"
 # Resize partition table: resize last partition to max size
 echo ", +" | sudo sfdisk -N "$partition_number" "$device" --backup "$device" --backup-file "$name"_beforeRestore_partitionTable_backup
 # Expand filesystem to fill
 sleep 5 # Without this, it says nothing to do or whatever..
-sudo resize2fs -p "$device$partition_number"
+resize2fs -p "$device$partition_number"
 read -p "done. press enter to power off the SD card for safe removal." asd
 udisksctl power-off -b "$device"
