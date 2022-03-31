@@ -27,7 +27,7 @@ output="img_restored_${name}_on_$(date "+%Y-%m-%d_%H_%M_%S_%Z")"
 read -p "go?" asd
 ddrescue --force --ask -v --size=$size "$fname" "$device" "$output.restore.mapfile.txt"
 # Resize partition table: resize last partition to max size
-echo ", +" | sudo sfdisk -N "$partition_number" "$device" --backup "$device" --backup-file "$name"_beforeRestore_partitionTable_backup
+echo ", +" | sfdisk -N "$partition_number" "$device" --backup "$device" --backup-file "$name"_beforeRestore_partitionTable_backup
 # Expand filesystem to fill
 sleep 5 # Without this, it says nothing to do or whatever..
 resize2fs -p "$device$partition_number"
